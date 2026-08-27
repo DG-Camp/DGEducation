@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import AdminPage from './modules/admin/AdminPage';
 import type { ChangeEvent, FormEvent } from 'react';
 import {
   Course,
@@ -798,111 +799,7 @@ function App() {
           </section>
         )}
 
-        {section === 'admin' && (
-          <section className="stack">
-            <Card title="Admin panel" subtitle="Add courses and lessons locally. The panel is only useful for the admin role.">
-              {currentUser?.role === 'admin' ? (
-                <>
-                <div className="admin-grid">
-                  <form className="stack" onSubmit={addCourse}>
-                    <h3>{editingCourseId ? 'Edit course' : 'New course'}</h3>
-                    <label className="field"><span>Title</span><input value={adminCourseDraft.title} onChange={(e) => setAdminCourseDraft((draft) => ({ ...draft, title: e.target.value }))} /></label>
-                    <label className="field"><span>Category</span>
-                      <select value={adminCourseDraft.category} onChange={(e) => setAdminCourseDraft((draft) => ({ ...draft, category: e.target.value as Course['category'] }))}>
-                        <option>Programming</option>
-                        <option>Design</option>
-                        <option>AI</option>
-                      </select>
-                    </label>
-                    <label className="field"><span>Level</span>
-                      <select value={adminCourseDraft.level} onChange={(e) => setAdminCourseDraft((draft) => ({ ...draft, level: e.target.value as Course['level'] }))}>
-                        <option>Beginner</option>
-                        <option>Intermediate</option>
-                        <option>Advanced</option>
-                      </select>
-                    </label>
-                    <label className="field"><span>Description</span><textarea rows={3} value={adminCourseDraft.description} onChange={(e) => setAdminCourseDraft((draft) => ({ ...draft, description: e.target.value }))} /></label>
-                    <div className="button-row">
-                      <button className="primary-button" type="submit">{editingCourseId ? 'Save course' : 'Add course'}</button>
-                      {editingCourseId && (
-                        <button className="ghost-button" type="button" onClick={() => {
-                          setEditingCourseId(null);
-                          setAdminCourseDraft({ title: '', category: 'Programming', level: 'Beginner', description: '' });
-                        }}>
-                          Cancel
-                        </button>
-                      )}
-                    </div>
-                  </form>
-
-                  <form className="stack" onSubmit={addLesson}>
-                    <h3>{editingLessonId ? 'Edit lesson' : 'New lesson'}</h3>
-                    <label className="field"><span>Course</span>
-                      <select value={adminLessonDraft.courseId} onChange={(e) => setAdminLessonDraft((draft) => ({ ...draft, courseId: e.target.value }))}>
-                        {courses.map((course) => <option key={course.id} value={course.id}>{course.title}</option>)}
-                      </select>
-                    </label>
-                    <label className="field"><span>Title</span><input value={adminLessonDraft.title} onChange={(e) => setAdminLessonDraft((draft) => ({ ...draft, title: e.target.value }))} /></label>
-                    <label className="field"><span>Duration</span><input value={adminLessonDraft.duration} onChange={(e) => setAdminLessonDraft((draft) => ({ ...draft, duration: e.target.value }))} /></label>
-                    <label className="field"><span>Type</span>
-                      <select value={adminLessonDraft.type} onChange={(e) => setAdminLessonDraft((draft) => ({ ...draft, type: e.target.value as Lesson['type'] }))}>
-                        <option>Reading</option>
-                        <option>Video</option>
-                        <option>Practice</option>
-                      </select>
-                    </label>
-                    <label className="field"><span>Summary</span><textarea rows={3} value={adminLessonDraft.summary} onChange={(e) => setAdminLessonDraft((draft) => ({ ...draft, summary: e.target.value }))} /></label>
-                    <div className="button-row">
-                      <button className="primary-button" type="submit">{editingLessonId ? 'Save lesson' : 'Add lesson'}</button>
-                      {editingLessonId && (
-                        <button className="ghost-button" type="button" onClick={() => {
-                          setEditingLessonId(null);
-                          setAdminLessonDraft({ courseId: courses[0]?.id ?? '', title: '', duration: '12 min', type: 'Reading', summary: '' });
-                        }}>
-                          Cancel
-                        </button>
-                      )}
-                    </div>
-                  </form>
-                </div>
-                <div className="stack" style={{ marginTop: '18px' }}>
-                  <h3>Manage existing content</h3>
-                  {courses.map((course) => (
-                    <div className="quiz-question" key={course.id}>
-                      <div className="progress-head">
-                        <div>
-                          <strong>{course.title}</strong>
-                          <p>{course.category} · {course.level}</p>
-                        </div>
-                        <div className="button-row">
-                          <button className="ghost-button small" type="button" onClick={() => editCourse(course)}>Edit</button>
-                          <button className="ghost-button small" type="button" onClick={() => deleteCourse(course.id)}>Delete</button>
-                        </div>
-                      </div>
-                      <div className="stack tight" style={{ marginTop: '12px' }}>
-                        {course.lessons.map((lesson) => (
-                          <div className="summary-row" key={lesson.id}>
-                            <div>
-                              <strong>{lesson.title}</strong>
-                              <p>{lesson.duration} · {lesson.type}</p>
-                            </div>
-                            <div className="button-row">
-                              <button className="ghost-button small" type="button" onClick={() => editLesson(course.id, lesson)}>Edit</button>
-                              <button className="ghost-button small" type="button" onClick={() => deleteLesson(course.id, lesson.id)}>Delete</button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                </>
-              ) : (
-                <EmptyState title="Admin access only" description="Sign in with the admin account to manage courses and lessons." />
-              )}
-            </Card>
-          </section>
-        )}
+        {section === 'admin' && <AdminPage />}
 
         {section === 'leaderboard' && (
           <section className="stack">
